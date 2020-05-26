@@ -3,21 +3,22 @@ package util
 import (
 	"github.com/hajimehoshi/ebiten"
 	"github.com/peterhellberg/gfx"
+	"image"
 	"log"
 	"math"
 )
 
-type ScrollingImage struct{
+type ScrollingImage struct {
 	img     *ebiten.Image
 	scrollX float64
-	offset gfx.Vec
+	offset  gfx.Vec
 }
 
 func NewScrollingImage(img *ebiten.Image, offset gfx.Vec) *ScrollingImage {
 	return &ScrollingImage{
 		img:     img,
 		scrollX: 0,
-		offset: offset,
+		offset:  offset,
 	}
 }
 
@@ -60,4 +61,31 @@ func LoadImageOrFatal(imageBytes []byte) *ebiten.Image {
 		log.Fatal(err)
 	}
 	return img
+}
+
+// PackImages draws all input images on a single image
+func PackImages(images []*ebiten.Image) (*ebiten.Image, error) {
+	var totalWidth int
+	for _, img := range images {
+		totalWidth += img.Bounds().Dx()
+	}
+
+	// Create image and draw characters
+	opt := &ebiten.DrawImageOptions{}
+	packedImg, err := ebiten.NewImage(totalWidth, 64, ebiten.FilterDefault)
+	if err != nil {
+		return nil, err
+	}
+	for _, img := range images {
+		packedImg.DrawImage(img, opt)
+		opt.GeoM.Translate(float64(img.Bounds().Dx()), 0)
+	}
+	return packedImg, nil
+}
+
+func CenterBoundsOnBounds(small, large image.Rectangle) image.Point {
+	dx := (large.Dx() - small.Dx()) / 2
+	dy := (large.Dy() - small.Dy()) / 2
+
+	return large.Min.Add(image.Pt(dx, dy))
 }

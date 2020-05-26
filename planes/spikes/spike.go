@@ -81,7 +81,7 @@ func New(screenWidth, screenHeight float64) Spikes {
 
 	var ss []*Spike
 	for i := 0.0; i < count; i++ {
-		downRock := randomRock(i*sliceWidth, offset(screenWidth), screenHeight)
+		downRock := randomRock(screenWidth + i*sliceWidth, offset(screenWidth), screenHeight)
 		ss = append(ss, &downRock)
 	}
 
