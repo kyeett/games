@@ -5,23 +5,22 @@ import (
 	"github.com/hajimehoshi/ebiten"
 	"github.com/kyeett/games/planes/assets"
 	"github.com/kyeett/games/util"
+	"log"
 )
 
 var (
-	TextGameOver, TextGetReady, PressEnterToStart *ebiten.Image
+	TextGameOver, TextGetReady, TextVictory *ebiten.Image
+	PressEnterToStart, PressEnterToRestart *ebiten.Image
 
 	Numbers = map[int]*ebiten.Image{}
 )
 
 func init() {
-	// Load images and calculate total width
-	images := loadString("PRESS \"ENTER\" TO START")
+	images := loadString("VICTORY")
+	TextVictory, _ = util.PackImages(images)
 
-	enterTmp, _ := util.PackImages(images)
-	PressEnterToStart, _ = ebiten.NewImage(enterTmp.Bounds().Dx()/2, enterTmp.Bounds().Dy()/2, ebiten.FilterDefault)
-	opt := &ebiten.DrawImageOptions{}
-	opt.GeoM.Scale(0.5, 0.5)
-	PressEnterToStart.DrawImage(enterTmp, opt)
+	PressEnterToStart = loadStringScaled("PRESS \"ENTER\" TO START", 0.5)
+	PressEnterToRestart = loadStringScaled("PRESS \"ENTER\" TO RESTART", 0.5)
 
 	TextGameOver = util.LoadAssetImageOrFatal(assets.Asset, "assets/UI/textGameOver.png")
 	TextGetReady = util.LoadAssetImageOrFatal(assets.Asset, "assets/UI/textGetReady.png")
@@ -30,6 +29,22 @@ func init() {
 		path := fmt.Sprintf("assets/Numbers/number%s.png", string(r))
 		Numbers[i] = util.LoadAssetImageOrFatal(assets.Asset, path)
 	}
+}
+
+func loadStringScaled(str string, scale float64) *ebiten.Image {
+	images := loadString(str)
+	enterTmp, err := util.PackImages(images)
+	if err != nil {
+		log.Fatal(err)
+	}
+	img, err := ebiten.NewImage(enterTmp.Bounds().Dx()/2, enterTmp.Bounds().Dy()/2, ebiten.FilterDefault)
+	if err != nil {
+		log.Fatal(err)
+	}
+	opt := &ebiten.DrawImageOptions{}
+	opt.GeoM.Scale(scale, scale)
+	img.DrawImage(enterTmp, opt)
+	return img
 }
 
 func loadString(text string) []*ebiten.Image {
