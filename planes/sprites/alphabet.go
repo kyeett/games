@@ -11,6 +11,7 @@ import (
 var (
 	TextGameOver, TextGetReady, TextVictory *ebiten.Image
 	PressEnterToStart, PressEnterToRestart *ebiten.Image
+	TextControls *ebiten.Image
 
 	Numbers = map[int]*ebiten.Image{}
 )
@@ -19,6 +20,7 @@ func init() {
 	images := loadString("VICTORY")
 	TextVictory, _ = util.PackImages(images)
 
+	TextControls = loadStringScaled("W/S TO FLY", 0.5)
 	PressEnterToStart = loadStringScaled("PRESS \"ENTER\" TO START", 0.5)
 	PressEnterToRestart = loadStringScaled("PRESS \"ENTER\" TO RESTART", 0.5)
 
@@ -57,6 +59,8 @@ func loadString(text string) []*ebiten.Image {
 			img, _ = ebiten.NewImage(30, 1, ebiten.FilterDefault)
 		case '"':
 			img = util.LoadAssetImageOrFatal(assets.Asset, "assets/Letters/letterQuote.png")
+		case '/':
+			img = util.LoadAssetImageOrFatal(assets.Asset, "assets/Letters/letterSlash.png")
 		default:
 			path := fmt.Sprintf("assets/Letters/letter%s.png", string(r))
 			img = util.LoadAssetImageOrFatal(assets.Asset, path)

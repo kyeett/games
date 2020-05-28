@@ -4,6 +4,7 @@ import (
 	"github.com/hajimehoshi/ebiten"
 	"github.com/peterhellberg/gfx"
 	"image"
+	"image/color"
 	"log"
 	"math"
 )
@@ -62,6 +63,19 @@ func LoadImageOrFatal(imageBytes []byte) *ebiten.Image {
 	}
 	return img
 }
+
+func MustNewRectangle(w,h int, c color.Color) *ebiten.Image {
+	img, err := ebiten.NewImage(w, h, ebiten.FilterDefault)
+	if err != nil {
+		log.Fatal(err)
+	}
+	img.Fill(c)
+	return img
+}
+
+
+
+
 
 // PackImages draws all input images on a single image
 func PackImages(images []*ebiten.Image) (*ebiten.Image, error) {
