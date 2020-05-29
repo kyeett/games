@@ -46,7 +46,8 @@ func (g *game) Draw(screen *ebiten.Image) {
 
 	if config.Debug {
 		ebitenutil.DebugPrint(screen, fmt.Sprintf("TPS: %0.2f", ebiten.CurrentTPS()))
-		ebitenutil.DebugPrintAt(screen, fmt.Sprintf("State: %s", g.state), 0, 25)
+		ebitenutil.DebugPrintAt(screen, fmt.Sprintf("FPS: %0.2f", ebiten.CurrentFPS()),0,25)
+		ebitenutil.DebugPrintAt(screen, fmt.Sprintf("State: %s", g.state), 0, 50)
 	}
 
 }
