@@ -62,7 +62,7 @@ func main() {
 	}
 	g.newGame()
 
-	ebiten.SetFullscreen(true)
+	ebiten.SetFullscreen(false)
 
 	if err := ebiten.RunGame(g); err != nil {
 		log.Fatal(err)

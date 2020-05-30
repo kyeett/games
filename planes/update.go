@@ -14,29 +14,36 @@ func (g *game) Update(_ *ebiten.Image) error {
 		return fmt.Errorf("exit game")
 	}
 
-	if inpututil.IsKeyJustPressed(ebiten.KeyD) {
-		config.Debug = !config.Debug
-	}
+	timed("update", func() {
 
-	g.background.Scroll(g.velocityX / 6)
-	g.spikes.Scroll(g.velocityX)
-	g.foreground.Scroll(g.velocityX)
+		if inpututil.IsKeyJustPressed(ebiten.KeyD) {
+			config.Debug = !config.Debug
+		}
 
-	switch g.state {
-	case "running":
-		g.stateRunning()
-	case "victory":
-		g.stateWinning()
-	default:
-		g.checkGameRestart()
-	}
+		timed("scroll", func() {
+			g.background.Scroll(g.velocityX / 6)
+			g.spikes.Scroll(g.velocityX)
+			g.foreground.Scroll(g.velocityX)
+		})
+
+		timed("running", func() {
+			switch g.state {
+			case "running":
+				g.stateRunning()
+			case "victory":
+				g.stateWinning()
+			default:
+				g.checkGameRestart()
+			}
+
+		})
+	})
 
 	return nil
 }
 
-
 func (g *game) stateWinning() {
-	target := gfx.V(screenWidth + 100, screenHeight/2)
+	target := gfx.V(screenWidth+100, screenHeight/2)
 	dv := g.plane.To(target).Unit()
 	g.plane.Vec = g.plane.Vec.Add(dv)
 
@@ -67,17 +74,15 @@ func (g *game) stateRunning() {
 	g.posX += g.velocityX
 	g.handleUpDown()
 
-
-
 	// Quick fix, if player is this close to the goal, they should not die :-D
-	isVeryCloseToGoal := g.posX+100 >= config.GoalAt
-
-	// Check collision
-	if g.spikes.CollidesWith(g.plane.Hitbox()) && !isVeryCloseToGoal {
-		g.plane.Visible = false
-		g.state = "game-over"
-		return
-	}
+	//isVeryCloseToGoal := g.posX+100 >= config.GoalAt
+	//
+	//// Check collision
+	//if g.spikes.CollidesWith(g.plane.Hitbox()) && !isVeryCloseToGoal {
+	//	g.plane.Visible = false
+	//	g.state = "game-over"
+	//	return
+	//}
 
 	if g.posX >= config.GoalAt {
 		g.state = "victory"
