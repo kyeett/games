@@ -16,9 +16,15 @@ func (g game) Draw(screen *ebiten.Image) {
 	ebitenutil.DebugPrint(screen, "template")
 }
 
+const (
+	screenWidth  = 800
+	screenHeight = 600
+)
+
 func (g game) Layout(w, h int) (int, int) {
-	return w,h
+	return screenWidth, screenHeight
 }
+
 
 func main() {
 	g := &game{}

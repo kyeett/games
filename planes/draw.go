@@ -49,7 +49,6 @@ func (g *game) Draw(screen *ebiten.Image) {
 		ebitenutil.DebugPrintAt(screen, fmt.Sprintf("FPS: %0.2f", ebiten.CurrentFPS()),0,25)
 		ebitenutil.DebugPrintAt(screen, fmt.Sprintf("State: %s", g.state), 0, 50)
 	}
-
 }
 
 func drawControls(screen *ebiten.Image) error {
