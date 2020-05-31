@@ -15,7 +15,9 @@ type Tile struct {
 	*World
 }
 
-const KindBlocker = "blocker"
+const (
+	KindBlocker = "blocker"
+)
 
 func (t *Tile) PathNeighbors() []astar.Pather {
 	neighbors := []astar.Pather{}

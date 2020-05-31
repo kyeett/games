@@ -2,6 +2,7 @@ package pathfinding
 
 import (
 	"github.com/kyeett/collections/grid"
+	"github.com/peterhellberg/gfx"
 )
 
 type World struct {
@@ -9,7 +10,7 @@ type World struct {
 }
 
 func (w World) Get(x, y int) *Tile {
-	t := w.grid.Get(grid.Point{x, y})
+	t := w.grid.Get(gfx.Pt(x, y))
 	if t == nil {
 		return nil
 	}
@@ -20,7 +21,7 @@ func (w World) Get(x, y int) *Tile {
 func (w World) Set(t *Tile, x, y int) {
 	t.X = x
 	t.Y = y
-	w.grid.Set(grid.Point{x, y}, t)
+	w.grid.Set(gfx.Pt(x, y), t)
 }
 
 func New(w, h int) *World {
