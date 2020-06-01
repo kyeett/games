@@ -5,7 +5,7 @@ import (
 	"github.com/peterhellberg/gfx"
 )
 
-func Vec() gfx.Vec {
+func Position() gfx.Vec {
 	x, y := ebiten.CursorPosition()
 	return gfx.IV(x, y)
 }

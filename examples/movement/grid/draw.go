@@ -1,17 +1,10 @@
 package main
 
 import (
-	"github.com/beefsack/go-astar"
 	"github.com/hajimehoshi/ebiten"
 	"github.com/kyeett/games/pathfinding"
-	"github.com/kyeett/games/util/cursor"
 	"golang.org/x/image/colornames"
 	"image/color"
-)
-
-const (
-	gridHeight = 10
-	gridWidth  = 10
 )
 
 func (g *game) Draw(screen *ebiten.Image) {
@@ -31,22 +24,13 @@ func (g *game) Draw(screen *ebiten.Image) {
 	}
 
 
-	if p, found := g.grid.ToPoint(cursor.Position()); found {
-		g.target = point{p.X, p.Y}
-		g.drawTile(screen, p.X, p.Y, colornames.Yellow)
-	}
-
-	t1 := g.world.Get(g.player.x, g.player.y)
-	t2 := g.world.Get(g.target.x, g.target.y)
-	path, _, found := astar.Path(t1, t2)
-	if !found {
-		return
-	}
-
-	for _, p := range path {
-		t := p.(*pathfinding.Tile)
-		g.drawTile(screen, t.X, t.Y, colornames.Red)
-	}
+	g.drawTile(screen, g.player.gridPos.X, g.player.gridPos.Y, colornames.Yellow)
+	opt := &ebiten.DrawImageOptions{}
+	opt.GeoM.Scale(0.5,0.5)
+	opt.GeoM.Translate(10,10)
+	opt.GeoM.Translate(g.player.pos.X, g.player.pos.Y)
+	opt.ColorM.Scale(1,0,0,0.5)
+	screen.DrawImage(square, opt)
 }
 
 func (g *game) drawTile(screen *ebiten.Image, x, y int, clr color.Color) {
@@ -63,9 +47,6 @@ func (g *game) drawTile(screen *ebiten.Image, x, y int, clr color.Color) {
 		opt.ColorM.Scale(1, 1, 1, 1)
 	}
 
-
 	g.grid.TranslateXY(x, y, opt)
 	screen.DrawImage(square, opt)
 }
-
-
