@@ -7,6 +7,8 @@ import (
 	"image/color"
 )
 
+
+
 func (g *game) Draw(screen *ebiten.Image) {
 	for y := 0; y < gridHeight; y++ {
 		for x := 0; x < gridWidth; x++ {
@@ -25,12 +27,8 @@ func (g *game) Draw(screen *ebiten.Image) {
 
 
 	g.drawTile(screen, g.player.gridPos.X, g.player.gridPos.Y, colornames.Yellow)
-	opt := &ebiten.DrawImageOptions{}
-	opt.GeoM.Scale(0.5,0.5)
-	opt.GeoM.Translate(10,10)
-	opt.GeoM.Translate(g.player.pos.X, g.player.pos.Y)
-	opt.ColorM.Scale(1,0,0,0.5)
-	screen.DrawImage(square, opt)
+	g.player.Draw(screen)
+
 }
 
 func (g *game) drawTile(screen *ebiten.Image, x, y int, clr color.Color) {

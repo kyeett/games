@@ -41,52 +41,67 @@ var manhattanOffsets = [][]int{
 	{0, 1},
 }
 
-//var allOffsets = [][]int{
-//	{-1, -1},
-//	{-1, 0},
-//	{1, -1},
-//	{1, 0},
-//	{-1, 1},
-//	{0, -1},
-//	{1, 1},
-//	{0, 1},
-//}
+var offsets = [][]int{
+	{-1, -1},
+	{0, -1},
+	{1, -1},
+
+	{1, 0},
+
+	{1, 1},
+	{0, 1},
+	{-1, 1},
+
+	{-1, 0},
+}
+
+func wrappedGet(i int) []int {
+	i = (len(offsets) + i) % len(offsets)
+	return offsets[i]
+}
 
 func (t *Tile) PathNeighbors() []astar.Pather {
 	neighbors := []astar.Pather{}
 
-	for _, offset := range manhattanOffsets {
-		if n := t.World.Get(t.X+offset[0], t.Y+offset[1]); n.isWalkable() {
-			n.MovementCost = 1
-			neighbors = append(neighbors, n)
+	for i, offset := range offsets {
+		isDiagonal := i%2 == 0
+
+		neighbor := t.World.Get(t.X+offset[0], t.Y+offset[1])
+
+		if !neighbor.isWalkable() {
+			continue
 		}
-	}
 
-	// Up right
-	if t.upRight().isWalkable() && t.up().isWalkable() && t.right().isWalkable() {
-		neighbors = append(neighbors, t.upRight())
-	}
+		// Additional checks for diagonals
+		if isDiagonal {
+			//continue
+			o1 := wrappedGet(i + 1)
+			o2 := wrappedGet(i - 1)
 
-	// Down right
-	if t.downRight().isWalkable() && t.down().isWalkable() && t.right().isWalkable() {
-		neighbors = append(neighbors, t.downRight())
-	}
+			n1 := t.World.Get(t.X+o1[0], t.Y+o1[1])
+			n2 := t.World.Get(t.X+o2[0], t.Y+o2[1])
 
-	// Down left
-	if t.downLeft().isWalkable() && t.down().isWalkable() && t.left().isWalkable() {
-		neighbors = append(neighbors, t.downLeft())
-	}
+			if !n1.isWalkable() || !n2.isWalkable() {
+				continue
+			}
+		}
 
-	// Up left
-	if t.upLeft().isWalkable() && t.up().isWalkable() && t.left().isWalkable() {
-		neighbors = append(neighbors, t.upLeft())
+		// Calculate movement cost
+		neighbors = append(neighbors, neighbor)
 	}
 
 	return neighbors
 }
 
-func (t *Tile) PathNeighborCost(_ astar.Pather) float64 {
-	return math.Sqrt2
+func (t *Tile) PathNeighborCost(to astar.Pather) float64 {
+	toT := to.(*Tile)
+
+	isDiagonal := toT.X != t.X && toT.Y != t.Y
+	if isDiagonal {
+		return math.Sqrt2
+	}
+
+	return 1
 }
 
 func (t *Tile) PathEstimatedCost(to astar.Pather) float64 {
@@ -94,38 +109,4 @@ func (t *Tile) PathEstimatedCost(to astar.Pather) float64 {
 
 	// Calculate manhattan distance
 	return float64(gfx.IntAbs(toT.X-t.X) + gfx.IntAbs(toT.Y-t.Y))
-}
-
-func (t *Tile) up() *Tile {
-	return t.World.Get(t.X, t.Y-1)
-}
-
-func (t *Tile) upRight() *Tile {
-	return t.World.Get(t.X+1, t.Y-1)
-}
-
-func (t *Tile) right() *Tile {
-	return t.World.Get(t.X+1, t.Y)
-}
-
-func (t *Tile) downRight() *Tile {
-	return t.World.Get(t.X+1, t.Y+1)
-}
-
-func (t *Tile) down() *Tile {
-	return t.World.Get(t.X, t.Y+1)
-}
-
-func (t *Tile) downLeft() *Tile {
-	return t.World.Get(t.X-1, t.Y+1)
-}
-
-func (t *Tile) left() *Tile {
-	t2 := t.World.Get(t.X-1, t.Y)
-	t2.MovementCost = math.Sqrt2
-	return t
-}
-
-func (t *Tile) upLeft() *Tile {
-	return t.World.Get(t.X-1, t.Y-1)
 }
