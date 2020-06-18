@@ -2,6 +2,7 @@ package util
 
 import (
 	"github.com/hajimehoshi/ebiten"
+	"github.com/lucasb-eyer/go-colorful"
 	"github.com/peterhellberg/gfx"
 	"image"
 	"image/color"
@@ -102,4 +103,10 @@ func CenterBoundsOnBounds(small, large image.Rectangle) image.Point {
 	dy := (large.Dy() - small.Dy()) / 2
 
 	return large.Min.Add(image.Pt(dx, dy))
+}
+
+func OptScaleByColor(opt *ebiten.DrawImageOptions, clr color.Color) {
+	c, _ := colorful.MakeColor(clr)
+	r, g, b := c.LinearRgb()
+	opt.ColorM.Scale(r, g, b, 1)
 }
