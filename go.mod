@@ -4,6 +4,7 @@ go 1.14
 
 require (
 	github.com/beefsack/go-astar v0.0.0-20171024231011-f324bbb0d6f7
+	github.com/gdamore/tcell v1.3.0 // indirect
 	github.com/hajimehoshi/ebiten v1.11.1
 	github.com/kyeett/collections v0.1.3
 	github.com/kyeett/ebitendrawutil v0.0.0-20190926164211-7ad7d5420ec5

@@ -9,6 +9,7 @@ import (
 	"github.com/peterhellberg/gfx"
 	"golang.org/x/image/colornames"
 	"image"
+	"image/color"
 	"log"
 )
 
@@ -21,10 +22,10 @@ func init() {
 	CharacterSprite, _ = ebiten.NewImageFromImage(img, ebiten.FilterDefault)
 }
 
-func CharImage(c string) *ebiten.Image {
+func CharImage(c byte) *ebiten.Image {
 	var r image.Rectangle
 	switch c {
-	case "@":
+	case '@':
 		r = image.Rect(0, 0, 10, 10).Add(image.Pt(0, 10))
 	default:
 		log.Fatalf("invalid char: %v", c)
@@ -33,13 +34,19 @@ func CharImage(c string) *ebiten.Image {
 	return CharacterSprite.SubImage(r).(*ebiten.Image)
 }
 
-type Player struct {
+type Entity struct {
 	image.Point
+	color.Color
+	char byte
+}
+
+type Player struct {
+	Entity
 }
 
 func (p *Player) DrawAt(screen *ebiten.Image, opt *ebiten.DrawImageOptions) {
-	util.OptScaleByColor(opt, colornames.White)
-	screen.DrawImage(CharImage("@"), opt)
+	util.OptScaleByColor(opt, p.Color)
+	screen.DrawImage(CharImage(p.char), opt)
 }
 
 type game struct {
@@ -90,7 +97,9 @@ func (g game) Layout(w, h int) (int, int) {
 func main() {
 	/*screenWidth := 50
 	screenHeight := 80*/
-	p := &Player{image.Pt(10, 10)}
+	p := &Player{
+		Entity{image.Pt(10, 10), colornames.Firebrick, '@'},
+	}
 	g := &game{
 		grid:   grid.New(10, 10, windowWidth/10, windowHeight/10, 0, 0),
 		player: p,
