@@ -12,5 +12,5 @@ require (
 	github.com/lucasb-eyer/go-colorful v1.0.3
 	github.com/peterhellberg/gfx v0.0.0-20200413155834-f94ca2597d91
 	github.com/stretchr/testify v1.6.0
-	golang.org/x/image v0.0.0-20200430140353-33d19683fad8
+	golang.org/x/image v0.0.0-20200801110659-972c09e46d76
 )
