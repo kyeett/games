@@ -9,7 +9,9 @@ require (
 	github.com/inkyblackness/imgui-go/v2 v2.4.1
 	github.com/kyeett/collections v0.1.3
 	github.com/kyeett/ebitendrawutil v0.0.0-20190926164211-7ad7d5420ec5
+	github.com/kyeett/guigi v0.1.3
 	github.com/lucasb-eyer/go-colorful v1.0.3
+	github.com/ojrac/opensimplex-go v1.0.1 // indirect
 	github.com/peterhellberg/gfx v0.0.0-20200413155834-f94ca2597d91
 	github.com/stretchr/testify v1.6.0
 	golang.org/x/image v0.0.0-20200801110659-972c09e46d76
